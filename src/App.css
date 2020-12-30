@@ -1,5 +1,10 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@1,700&display=swap');
+
 .App {
   text-align: center;
+  height: 100vh;
+  background-image: linear-gradient(to bottom, #3f51b5, white);
 }
 
 .App-logo {
@@ -12,7 +17,82 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+.movieContainer{
+  display:flex;
+  flex-wrap: wrap;
+  width:70%;
+  height:max-content;
+}
+.itemsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-around;
+}
+.movieItem{
+  width:max-content;
+}
+.loginContainer{
+  width:75%;
+  display:flex;
+  height: 80%;
+  margin: auto;
+  flex-direction: row;
+  min-width: 500px;
+  background-color: white;
+}
+.nominationContainer{
+  width:max-content;
+  display:flex;
+  flex-direction: column;
+   border-left: 2px solid #3f51b5;
+   padding:10px;
+}
+.inputBox{
+  color: black;
+  border: none;
+  border-bottom: 1px solid #abaeb0;
+  outline: none;
+  font-size: 20px;
+  width: 50%;
+  margin-top: 3%;
+  padding:15px;
+  border-radius: 15px;
+  margin:auto;
+  background-color: #E1E4F1;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.searchMain{
+  
+  font-size: 40px;
+  width:max-content;
+  color:white;
+  font-weight: 600;
+  margin: auto;
+  font-family: 'Comic Neue',cursive;
+  height:max-content;
+}
+.nominationTitle {
+  font-size: 40px;
+  width: max-content;
+  font-weight: 600;
+  color:white;
+  margin: auto;
+  margin-top:25px;
+  margin-bottom: 25px;
+  font-family: 'Comic Neue', cursive;
+  height: max-content;
+}
+.errorText {
+  font-size: 40px;
+  width: max-content;
+  color: red;
+  font-weight: 600;
+  margin: auto;
+  font-family: 'Comic Neue', cursive;
+  height: max-content;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
