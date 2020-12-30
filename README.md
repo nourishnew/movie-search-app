@@ -4,6 +4,9 @@ Here is link for the the deployed app
 
 https://shopify-shoppies-nourish-app.netlify.app/
 
+Here is the Youtube video of the app.
+
+https://youtu.be/YNdZD2Tg5SM
 
 Please create an account with your name.
 You can login using the same name and your data will be stored in database.
