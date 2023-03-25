@@ -109,7 +109,7 @@ export default function MovieApp({ id, logout }) {
 
 	function handleAddNomination(id) {
 		if (data.nominationsIds.length < 5) {
-			enqueueSnackbar("Adding to nomination List. Please wait");
+			enqueueSnackbar("Adding to Watch List. Please wait");
 			addToNomination(
 				{
 					userId: userId,
@@ -118,7 +118,7 @@ export default function MovieApp({ id, logout }) {
 				{
 					onSuccess: ({ data }) => {
 						refetch();
-						enqueueSnackbar("Movie has been added to your nomination list", {
+						enqueueSnackbar("Movie has been added to your Watch list", {
 							variant: "success",
 						});
 					},
@@ -126,7 +126,7 @@ export default function MovieApp({ id, logout }) {
 				{
 					onError: ({ data }) => {
 						refetch();
-						enqueueSnackbar("Couldn't add to nomination. Please try again", {
+						enqueueSnackbar("Couldn't add to Watch list. Please try again", {
 							variant: "error",
 						});
 					},
@@ -254,7 +254,7 @@ export default function MovieApp({ id, logout }) {
 								{data && data.nominationsIds.length === 0 ? (
 									<div>
 										<p className="searchMain">
-											You have 0 movies nominated for the awards.
+											You have 0 movies in your Watch List.
 										</p>
 										<p className="searchMain">You can add upto 5 movies.</p>
 									</div>
@@ -315,7 +315,7 @@ export default function MovieApp({ id, logout }) {
 					</div>
 					{data && data.nominationsIds.length > 0 ? (
 						<div className="nominationContainer">
-							<p className="nominationTitle">My nominations</p>
+							<p className="nominationTitle">My Watch List</p>
 
 							{!isLoading && data
 								? data.nominationsIds.map((id) => {
