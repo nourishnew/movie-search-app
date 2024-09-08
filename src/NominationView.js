@@ -6,8 +6,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import useGetMovie from "./hooks/useGetMovie";
-import useDeleteNomination from "./hooks/useDeleteNomination";
-import { useSnackbar } from "notistack";
 import { Button, makeStyles, fade } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 
@@ -68,37 +66,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function NominationView({ userId, id, refetch }) {
-	const { enqueueSnackbar } = useSnackbar();
-
-	const [deleteNomination] = useDeleteNomination();
+export default function NominationView({ id, handleDeleteNomination }) {
 	const { data, isLoading } = useGetMovie(id);
-	function handleDeleteNomination(id) {
-		enqueueSnackbar("Removing from nomination List. Please wait");
-
-		deleteNomination(
-			{
-				userId: userId,
-				movieId: id,
-			},
-			{
-				onSuccess: ({ data }) => {
-					refetch();
-					enqueueSnackbar("Movie has been removed from your nomination list", {
-						variant: "success",
-					});
-				},
-			},
-			{
-				onError: ({ data }) => {
-					refetch();
-					enqueueSnackbar("Couldn't remove from nomination. Please try again", {
-						variant: "error",
-					});
-				},
-			}
-		);
-	}
 
 	const classes = useStyles();
 	return (
@@ -128,8 +97,7 @@ export default function NominationView({ userId, id, refetch }) {
 						<Button
 							variant="contained"
 							color="secondary"
-							onClick={() => handleDeleteNomination(data.imdbID)}
-						>
+							onClick={() => handleDeleteNomination(data.imdbID)}>
 							Remove
 						</Button>
 					</CardActions>

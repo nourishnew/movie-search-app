@@ -10,8 +10,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import { useState } from "react";
 import HomeIcon from "@material-ui/icons/Home";
-import useAddToNomination from "./hooks/useAddToNomination";
-import useFetchNominations from "./hooks/useFetchNominations";
 
 import useFormInput from "./hooks/useFormInput";
 import { useSnackbar } from "notistack";
@@ -43,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		maxWidth: 345,
 		marginTop: "20px",
+		margin: "2em",
 	},
 	search: {
 		position: "relative",
@@ -96,50 +95,27 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function MovieApp({ id, logout }) {
-	const [userId, setUserId] = useState(id);
-	const [addToNomination] = useAddToNomination();
+export default function MovieApp({}) {
 	const [searchLoading, setSearchLoading] = useState(false);
+	const [fav, setFav] = useState([]);
 	const [movieList, setMovieList] = useState([]);
 	const keyword = useFormInput();
 	const [error, setError] = useState(false);
-	const { data, isLoading, isSuccess, refetch } = useFetchNominations(id);
 
 	const { enqueueSnackbar } = useSnackbar();
 
 	function handleAddNomination(id) {
-		if (data.nominationsIds.length < 5) {
-			enqueueSnackbar("Adding to Watch List. Please wait");
-			addToNomination(
-				{
-					userId: userId,
-					movieId: id,
-				},
-				{
-					onSuccess: ({ data }) => {
-						refetch();
-						enqueueSnackbar("Movie has been added to your Watch list", {
-							variant: "success",
-						});
-					},
-				},
-				{
-					onError: ({ data }) => {
-						refetch();
-						enqueueSnackbar("Couldn't add to Watch list. Please try again", {
-							variant: "error",
-						});
-					},
-				}
-			);
-		} else {
-			enqueueSnackbar(
-				"Maximum number of movies reached.You can add only upto 5 movies",
-				{
-					variant: "error",
-				}
-			);
-		}
+		setFav((prevItems) => [...prevItems, id]);
+		enqueueSnackbar("Movie has been added to your Watch list", {
+			variant: "success",
+		});
+	}
+
+	function handleDeleteNomination(id) {
+		setFav((prevItems) => prevItems.filter((item) => item !== id));
+		enqueueSnackbar("Movie has been removed from your Watch list", {
+			variant: "success",
+		});
 	}
 
 	async function handleSearch(word) {
@@ -189,15 +165,13 @@ export default function MovieApp({ id, logout }) {
 							onClick={() => {
 								setMovieList([]);
 								setError(false);
-							}}
-						>
+							}}>
 							<HomeIcon />
 						</IconButton>
 						<Typography
 							variant="h6"
 							className={classes.title}
-							onClick={() => setMovieList([])}
-						>
+							onClick={() => setMovieList([])}>
 							Home
 						</Typography>
 						<div className={classes.search}>
@@ -225,19 +199,8 @@ export default function MovieApp({ id, logout }) {
 						<Button
 							variant="contained"
 							color="secondary"
-							onClick={() => handleSearch(keyword.value)}
-						>
+							onClick={() => handleSearch(keyword.value)}>
 							Search
-						</Button>
-						<Button
-							color="inherit"
-							style={{ marginLeft: "auto" }}
-							onClick={() => {
-								setUserId(false);
-								logout();
-							}}
-						>
-							Logout
 						</Button>
 					</Toolbar>
 				</AppBar>
@@ -250,19 +213,16 @@ export default function MovieApp({ id, logout }) {
 							<p className="errorText">{error}</p>
 						) : movieList && movieList.length === 0 ? (
 							<div style={{ width: "100%" }}>
-								<p className="searchMain">Search for movies</p>
-								{data && data.nominationsIds.length === 0 ? (
+								<h1>Search for movies</h1>
+								{fav && fav.length === 0 ? (
 									<div>
-										<p className="searchMain">
-											You have 0 movies in your Watch List.
-										</p>
-										<p className="searchMain">You can add upto 5 movies.</p>
+										<p>You have 0 movies in your Watch List.</p>
+										<p>Watch List will be displayed on the right side</p>
 									</div>
 								) : null}
 							</div>
 						) : (
 							<div>
-								<p className="searchMain">Search Results</p>
 								<div className="itemsContainer">
 									{movieList &&
 										movieList.map((movie, index) => {
@@ -280,30 +240,24 @@ export default function MovieApp({ id, logout }) {
 															<Typography
 																gutterBottom
 																variant="h5"
-																component="h2"
-															>
+																component="h2">
 																{movie.Title}
 															</Typography>
 															<Typography
 																variant="body2"
 																color="textSecondary"
-																component="p"
-															>
+																component="p">
 																{movie.Year}
 															</Typography>
 														</CardContent>
 													</CardActionArea>
 													<CardActions>
 														<Button
-															disabled={
-																isSuccess &&
-																data.nominationsIds.includes(movie.imdbID)
-															}
+															disabled={fav.includes(movie.imdbID)}
 															variant="contained"
 															color="primary"
-															onClick={() => handleAddNomination(movie.imdbID)}
-														>
-															Nominate
+															onClick={() => handleAddNomination(movie.imdbID)}>
+															Add to watch list
 														</Button>
 													</CardActions>
 												</Card>
@@ -313,17 +267,16 @@ export default function MovieApp({ id, logout }) {
 							</div>
 						)}
 					</div>
-					{data && data.nominationsIds.length > 0 ? (
+					{fav && fav.length > 0 ? (
 						<div className="nominationContainer">
-							<p className="nominationTitle">My Watch List</p>
+							<h1>My Watch List</h1>
 
-							{!isLoading && data
-								? data.nominationsIds.map((id) => {
+							{fav
+								? fav.map((id) => {
 										return (
 											<NominationView
 												id={id}
-												userId={userId}
-												refetch={refetch}
+												handleDeleteNomination={handleDeleteNomination}
 											/>
 										);
 								  })
